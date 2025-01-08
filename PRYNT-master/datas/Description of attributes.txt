@@ -1,0 +1,48 @@
+Description of attributes : 
+
+Bakun et al. dataset
+
+protein_exp : annotation use in the publication	
+protein_string	: annotation use in String database
+protein_uniprot	no : annotation use in Uniprto database
+qvalue : gives the false positive rate (significant under 0.05)
+ratio :  Mean values Disease/Control of peptides ratio (iTRAQ quantitative analysis)
+peptides : number of peptides identified	
+annotation : complete name of the protein
+protein_external_id : Ensembl protein id
+protein_size : 	number of amino acids
+Uniprot description : description of the functions of the protein according to Uniprot database
+
+Chen et al. dataset
+
+Accession : Uniprot id
+Gene.ID : gene annotation
+Ensembl.Gene.ID : ensembl gene id
+PU.CON	: Pelvis Urine (PU), from unilateral UPJO infants with differential renal function compared with normal control urine (CON)
+PU.CON.SD : Standart Deviation of  Pelvis Urine (PU) comparison	
+PU.CON.P.value : significativity of the comparison (significant under 0.05)
+PU.CON.Q.value : gives the false positive rate (significant under 0.05)
+
+Lacroix et al. dataset
+
+protein_string	: annotation use in String database
+AC : IPI annotation
+Protein.name : complete name of the protein
+Gene.name : gene annotation
+ratio : Mean values Disease/Control of peptides ratio	
+p.value.t.test	: pvalue of the t-test
+p.value.BH : pvalue after a Benjamini-Hochberg
+
+Rauniyar et al. dataset
+
+protein_string	: annotation use in String database
+TAF.log2FC :  sum of its fragment ion peak areas (referred to as total area fragment [TAF] )  : log transform Foldchange between case and control.
+TAF.FDR : False discovery rate
+TAF.pvalue : significativity of the comparison (significant under 0.05)
+
+
+
+
+
+
+
