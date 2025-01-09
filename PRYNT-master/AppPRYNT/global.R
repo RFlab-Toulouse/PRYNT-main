@@ -7,6 +7,7 @@ usePackage <- function(p)
 }
 usePackage("igraph")
 usePackage("zoo")
+usePackage("DT")
 
 usePackage("shinycssloaders")
 
@@ -117,13 +118,14 @@ random_walk_ranking_function <- function(graph, seed, adjacency_matrix=NULL, mul
 # }
 
 downloaddataset<-function(x,file,cnames=T,rnames=T){
-  ext<-strsplit(x = file,split = "[.]")[[1]][2]
+  ext<-tools::file_ext(file) #strsplit(x = file,split = "[.]")[[1]][2]
   if(ext=="csv"){
     if(sum(cnames,rnames)==2){write.csv(x,file)}
     else{write.table(x,file,col.names = cnames,row.names = F,sep=";",dec=".")}
   }
   if(ext=="xlsx"){
     write.xlsx(x,file,col.names = cnames,row.names =rnames )
+    #writexl::write_xlsx(x,file, col_names = cnames)
   }
   
 }
