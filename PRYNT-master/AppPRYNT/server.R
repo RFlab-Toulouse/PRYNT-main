@@ -2,11 +2,6 @@ source("global.R")
 
 server <- function(input, output) {
   
-  
-  
-  
-  
-  
   # output$testtabparameters<- reactive({
   INPUT<- reactive({     DP_input<<- input$caption
   print("input")
@@ -17,34 +12,23 @@ server <- function(input, output) {
   
     output$value<-renderText({INPUT()})
   
-  RESULTS<-eventReactive(input$confirmdatabutton,{
-    DP_input<<- input$caption
-    DP_input<-strsplit(DP_input, "\n", fixed=FALSE)[[1]]
-
-    ########download the PPI network#####
-    ###from string package
-    print("network selection")
-    string_db <- STRINGdb$new(version="11", species=9606,
-                              score_threshold=0, input_directory="" )
-    
-    annotation<-string_db$get_proteins()
-    
-    
-    string_network<-string_db$get_interactions(string_ids =annotation[,1] )
-    string_network_900<-string_network[string_network$combined_score>=900,]
-    proteins_900<-unique(c(string_network_900$from,string_network_900$to))
-    
-    #DP repertoriated in string database
-    DP_string<-annotation$protein_external_id[annotation$preferred_name%in%DP_input]
-    
-    
-    ####Contextualization of the network####
-    #add relations with DP_string under a score of 900 to the network
-    print("contextualisation")
-    
-    ind1<-string_network$from%in%DP_string &string_network$to%in%proteins_900
-    
-    ind2<-string_network$from%in%DP_string & string_network$from%in%proteins_900
+    RESULTS<-eventReactive(input$confirmdatabutton,{
+      DP_input <- input$caption
+      DP_input <- strsplit(DP_input, "\n", fixed=FALSE)[[1]]
+      
+      ########download the PPI network#####
+      ###from string package
+      print("network selection")
+      
+      # Utiliser les variables déjà initialisées dans global.R
+      DP_string <- annotation$protein_external_id[annotation$preferred_name %in% DP_input]
+      
+      ####Contextualization of the network####
+      #add relations with DP_string under a score of 900 to the network
+      print("contextualisation")
+      
+      ind1 <- string_network$from %in% DP_string & string_network$to %in% proteins_900
+      ind2 <- string_network$from %in% DP_string & string_network$from %in% proteins_900
     
     sup_relation<-string_network[ind1|ind2,]
     # sup_relation<-sup_relation[,c("from","to","score")]
@@ -210,7 +194,7 @@ server <- function(input, output) {
     
   })
   
-  output$table =renderDataTable( {RESULTS()$PRYNT }, options = list(    "orderClasses" = F,
+  output$table =DT::renderDT( {RESULTS()$PRYNT }, options = list(    "orderClasses" = F,
                                                                  "responsive" = F,
                                                                  "pageLength" = 10,
                                                                  "rownames"=TRUE,
