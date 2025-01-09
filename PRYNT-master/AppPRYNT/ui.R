@@ -39,7 +39,7 @@ ui <- fluidPage(
       p(conditionalPanel(condition ="input.confirmdatabutton!=0" ,
             h2("Results"),
             # withSpinner(ui_element = 
-            dataTableOutput('table') %>% withSpinner(color="#0dc5c1",type = 8),align="center"),
+            DT::DTOutput('table') %>% withSpinner(color="#0dc5c1",type = 8),align="center"),
 
             # ,color="#0dc5c1",type = 8,))
             p(conditionalPanel(condition ="input.confirmdatabutton!=0" ,
@@ -48,7 +48,7 @@ ui <- fluidPage(
             
 
       )
-      # dataTableOutput("table")
+      # DT::DTOutput("table")
     )
   )
 )
