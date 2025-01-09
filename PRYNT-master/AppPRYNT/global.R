@@ -28,6 +28,9 @@ usePackage_bioconductor <- function(p) {
 
 # Installation des packages requis
 packages_to_install <- function() {
+  # Configuration des options de mémoire pour R
+  options(future.globals.maxSize = 4000 * 1024^2)  # Set to 4GB
+  
   # Packages de base
   usePackage("devtools")
   usePackage("shiny")
@@ -35,6 +38,9 @@ packages_to_install <- function() {
   # Packages Bioconductor
   usePackage_bioconductor("STRINGdb")
   usePackage_bioconductor("Rgraphviz")
+  
+  # Packages GitHub avec gestion des timeouts
+  options(timeout = 300)  # Augmente le timeout à 5 minutes
   
   # Packages GitHub
   if (!require("dnet")) {
