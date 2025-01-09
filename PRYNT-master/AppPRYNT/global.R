@@ -1,29 +1,56 @@
 ####Packages####
-usePackage <- function(p) 
-{
-  if (!is.element(p, installed.packages()[,1]))
+usePackage <- function(p) {
+  if (!is.element(p, installed.packages()[,1])) {
     install.packages(p, dep = TRUE)
+  }
   require(p, character.only = TRUE)
 }
-usePackage("igraph")
+
+#usePackage("igraph")
 usePackage("zoo")
 usePackage("DT")
 
 usePackage("shinycssloaders")
 
-
-usePackage_bioconductor <- function(p) 
-{
-  if (!requireNamespace("BiocManager", quietly = TRUE)){install.packages("BiocManager")}
-  
-  if (!is.element(p, installed.packages()[,1])){BiocManager::install(pkgs = p,update = FALSE)}
+usePackage_bioconductor <- function(p) {
+  if (!requireNamespace("BiocManager", quietly = TRUE)) {
+    install.packages("BiocManager")
+  }
+  if (!is.element(p, installed.packages()[,1])) {
+    BiocManager::install(pkgs = p, update = TRUE, force = TRUE)
+  }
+  # if (!is.element(p, installed.packages()[,1]) & p %in% c("Rgraphviz", "STRINGdb")) {
+  #   BiocManager::install(pkgs = p, update = TRUE, force = TRUE)
+  # }
   require(p, character.only = TRUE)
 }
 
+
+# Installation des packages requis
+packages_to_install <- function() {
+  # Packages de base
+  usePackage("devtools")
+  usePackage("shiny")
+  
+  # Packages Bioconductor
+  usePackage_bioconductor("STRINGdb")
+  usePackage_bioconductor("Rgraphviz")
+  
+  # Packages GitHub
+  if (!require("dnet")) {
+    devtools::install_github("hfang-bristol/dnet", upgrade = "never")
+  }
+  
+  if (!require("RandomWalkRestartMH")) {
+    devtools::install_github("alberto-valdeolivas/RandomWalkRestartMH", upgrade = "never")
+  }
+}
+
+packages_to_install()
 library(RandomWalkRestartMH)
-usePackage("RandomWalkRestartMH")
-usePackage_bioconductor("RandomWalkRestartMH")
-usePackage_bioconductor("STRINGdb") 
+# usePackage("RandomWalkRestartMH")
+# usePackage_bioconductor("RandomWalkRestartMH")
+# usePackage_bioconductor("STRINGdb") 
 #######Functions#######
 
 memory.limit(size =8078 )
@@ -135,10 +162,22 @@ downloaddataset<-function(x,file,cnames=T,rnames=T){
 ########download the PPI network#####
 ###from string package
 print("loading String Database")
-string_db <<- STRINGdb$new(version="11", species=9606,
-                          score_threshold=0, input_directory="" )
-
-annotation<<-string_db$get_proteins()
+initializer <- function() {
+  string_db <- STRINGdb$new(version="11", species=9606,
+                            score_threshold=0, input_directory="")
+  annotation <- string_db$get_proteins()
+  string_network <- string_db$get_interactions(string_ids = annotation[,1])
+  string_network_900 <- string_network[string_network$combined_score>=900,]
+  proteins_900 <- unique(c(string_network_900$from, string_network_900$to))
+  
+  return(list(
+    string_db = string_db,
+    annotation = annotation,
+    string_network = string_network,
+    string_network_900 = string_network_900,
+    proteins_900 = proteins_900
+  ))
+}
 
 
 string_network<<-string_db$get_interactions(string_ids =annotation[,1] )
